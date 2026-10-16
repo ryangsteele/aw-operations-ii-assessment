@@ -1,0 +1,42 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: shortlink
+  labels:
+    app: shortlink
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: shortlink
+  template:
+    metadata:
+      labels:
+        app: shortlink
+    spec:
+      containers:
+        - name: shortlink
+          image: shortlink:0.1.0
+          imagePullPolicy: IfNotPresent
+          ports:
+            - containerPort: 8080
+          envFrom:
+            - configMapRef:
+                name: shortlink-config
+          env:
+            - name: AWS_ACCESS_KEY_ID
+              valueFrom:
+                secretKeyRef:
+                  name: shortlink-aws
+                  key: AWS_ACCESS_KEY_ID
+            - name: AWS_SECRET_ACCESS_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: shortlink-aws
+                  key: AWS_SECRET_ACCESS_KEY
+          readinessProbe:
+            httpGet:
+              path: /healthz
+              port: 8000
+            initialDelaySeconds: 3
+            periodSeconds: 5

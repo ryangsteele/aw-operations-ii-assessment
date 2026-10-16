@@ -1,0 +1,8 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: shortlink-config
+data:
+  AWS_ENDPOINT_URL: http://localstack.infra.svc.cluster.local:4566
+  AWS_DEFAULT_REGION: us-east-1
+  CONFIG_SSM_PATH: /shortlink/production/bucket_name
